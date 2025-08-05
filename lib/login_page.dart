@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:latihan1_11pplg1/home_page.dart';
 import 'package:latihan1_11pplg1/register_page.dart';
+import 'package:latihan1_11pplg1/widgets/widget_button.dart';
+import 'package:latihan1_11pplg1/widgets/widget_textfield.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -52,46 +54,25 @@ class _LoginPageState extends State<LoginPage> {
             Text("please login using your email and password"),
             Container(
               margin: EdgeInsets.only(top: 20, bottom: 20),
-              child: TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  hintText: "Enter your email",
-                  border: OutlineInputBorder(),
-                ),
+              child: CustomTextField(
+                textEditingController: emailController,
+                hintText: "Input Email",
               ),
             ),
-            TextField(
-              controller: passwordController,
+            CustomTextField(
+              textEditingController: passwordController,
+              hintText: "Password",
               obscureText: true,
-              decoration: InputDecoration(
-                hintText: "Password",
-                border: OutlineInputBorder(),
-              ),
             ),
-
             Container(
               margin: EdgeInsets.only(top: 30),
               child: Center(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.cyan),
+                child: CustomButton(
+                  text: "Login",
+                  textColor: Colors.white,
                   onPressed: () {
-                    String email = emailController.text.trim();
-                    String password = passwordController.text.trim();
-                    if (email == 'admin' && password == '1234') {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text('Sukses Login')));
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomePage()),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Email atau Password salah')),
-                      );
-                    }
+                    print("ini Register");
                   },
-                  child: Text("Login", style: TextStyle(fontSize: 20)),
                 ),
               ),
             ),
