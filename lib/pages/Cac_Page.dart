@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:latihan1_11pplg1/controllers/calculator_controller.dart';
+import 'package:latihan1_11pplg1/routes/routes.dart';
 import 'package:latihan1_11pplg1/widgets/widget_button.dart';
 import 'package:latihan1_11pplg1/widgets/widget_textfield.dart';
 
@@ -17,7 +18,7 @@ class CalculatorPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Kalkulator"),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Colors.cyan,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -84,6 +85,14 @@ class CalculatorPage extends StatelessWidget {
               textColor: Colors.white,
               onPressed: () {
                 calculatorController.clear();
+              },
+            ),
+            const SizedBox(height: 20),
+            CustomButton(
+              text: 'Move to Football Player',
+              textColor: Colors.white,
+              onPressed: () {
+                Get.toNamed(AppRoutes.footballplayers);
               },
             ),
           ],
