@@ -21,6 +21,7 @@ class FootballPage extends StatelessWidget {
               FootballModel player = footballController.players[index];
               return ListTile(
                 leading: CircleAvatar(
+                  
                   backgroundImage: AssetImage(player.profileImage),
                 ),
                 title: Text(player.name),

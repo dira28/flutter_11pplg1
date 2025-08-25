@@ -28,15 +28,21 @@ class FootballEditPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            TextField(
-              decoration: InputDecoration(
-                labelText: "Profile Image",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+            Center(
+              child: Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(player.profileImage),
+                    fit: BoxFit.cover,
+                  ),
+                  borderRadius: BorderRadius.zero,
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
+
             TextField(
               controller: editCtrl.txtName,
               decoration: InputDecoration(
@@ -47,6 +53,7 @@ class FootballEditPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
+
             TextField(
               controller: editCtrl.txtPosition,
               decoration: InputDecoration(
@@ -57,6 +64,7 @@ class FootballEditPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
+
             TextField(
               controller: editCtrl.txtNumber,
               decoration: InputDecoration(
@@ -68,6 +76,7 @@ class FootballEditPage extends StatelessWidget {
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 20),
+
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(

@@ -22,15 +22,15 @@ class MainPage extends StatelessWidget {
           onTap: nav.changeTab,
           items: [
             BottomNavigationBarItem(
-              icon: Image.asset("assets/calculator.png", height: 24),
+              icon: Image.asset("assets/calculator.png", height: 25),
               label: 'Kalkulator',
             ),
             BottomNavigationBarItem(
-              icon: Image.asset("assets/football.png", height: 24),
+              icon: Image.asset("assets/football.png", height: 25),
               label: 'Football',
             ),
             BottomNavigationBarItem(
-              icon: Image.asset("assets/account.png", height: 24),
+              icon: Image.asset("assets/account.png", height: 25),
               label: 'Profile',
             ),
           ],

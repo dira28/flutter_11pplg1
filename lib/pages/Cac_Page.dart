@@ -87,14 +87,6 @@ class CalculatorPage extends StatelessWidget {
                 calculatorController.clear();
               },
             ),
-            const SizedBox(height: 20),
-            CustomButton(
-              text: 'Move to Football Player',
-              textColor: Colors.white,
-              onPressed: () {
-                Get.toNamed(AppRoutes.footballplayers);
-              },
-            ),
           ],
         ),
       ),
