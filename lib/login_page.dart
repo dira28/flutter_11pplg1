@@ -19,80 +19,76 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.teal,
-        title: Text(
+        backgroundColor: Colors.black,
+        title: const Text(
           "Login Page",
-          style: TextStyle(fontSize: 30, color: (Colors.white)),
+          style: TextStyle(fontSize: 24, color: Colors.white),
         ),
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Container(
-        margin: EdgeInsets.all(15),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Center(
-              child: Text(
-                "Welcome",
-                style: TextStyle(
-                  fontSize: 25,
-                  color: (Colors.black),
-                  fontWeight: FontWeight.bold,
-                ),
+            const SizedBox(height: 20),
+            const Text(
+              "Welcome",
+              style: TextStyle(
+                fontSize: 26,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 20),
 
-            Center(
-              child: Image.asset(
-                'assets/kalkulator.png',
-                width: 250,
-                height: 250,
-              ),
-            ),
-            SizedBox(height: 20),
+            Image.asset('assets/kalkulator.png', width: 220, height: 220),
 
-            Text("please login using your email and password"),
-            Container(
-              margin: EdgeInsets.only(top: 20, bottom: 20),
-              child: CustomTextField(
-                textEditingController: emailController,
-                hintText: "Input Email",
-              ),
+            const SizedBox(height: 20),
+            const Text(
+              "Please login using your email and password",
+              style: TextStyle(color: Colors.black54),
             ),
+
+            const SizedBox(height: 25),
+            CustomTextField(
+              textEditingController: emailController,
+              hintText: "Email",
+            ),
+            const SizedBox(height: 16),
             CustomTextField(
               textEditingController: passwordController,
               hintText: "Password",
               obscureText: true,
             ),
-            Container(
-              margin: EdgeInsets.only(top: 30),
-              child: Center(
-                child: CustomButton(
-                  text: "Login",
-                  textColor: Colors.white,
-                  onPressed: () {
-                    print("ini Register");
-                  },
-                ),
+
+            const SizedBox(height: 30),
+            SizedBox(
+              width: double.infinity,
+              child: CustomButton(
+                text: "Login",
+                textColor: Colors.black,
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomePage()),
+                  );
+                },
               ),
             ),
 
-            Center(
-              child: TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RegisterPage()),
-                  );
-                },
-                child: Text(
-                  "Belum punya akun? Register di sini",
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: (Colors.cyan),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+            const SizedBox(height: 20),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const RegisterPage()),
+                );
+              },
+              child: Text(
+                "Belum punya akun? Register di sini",
+                style: TextStyle(fontSize: 15, color: Colors.yellow.shade700),
               ),
             ),
           ],

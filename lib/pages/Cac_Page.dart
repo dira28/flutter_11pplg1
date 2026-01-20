@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:latihan1_11pplg1/controllers/calculator_controller.dart';
-import 'package:latihan1_11pplg1/routes/routes.dart';
 import 'package:latihan1_11pplg1/widgets/widget_button.dart';
 import 'package:latihan1_11pplg1/widgets/widget_textfield.dart';
 
 class CalculatorPage extends StatelessWidget {
   CalculatorPage({super.key});
 
-  final CalculatorController calculatorController = Get.put(
-    CalculatorController(),
-  );
+  //final CalculatorController calculatorController = Get.put(CalculatorController(),);
+  final calculatorController = Get.put(CalculatorController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Kalkulator"),
-        backgroundColor: Colors.cyan,
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),

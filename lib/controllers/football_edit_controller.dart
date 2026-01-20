@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:latihan1_11pplg1/models/football_model.dart';
-import 'package:latihan1_11pplg1/controllers/football_controller.dart';
+import '../models/football_model.dart';
 
 class FootballEditController extends GetxController {
   final txtName = TextEditingController();
   final txtPosition = TextEditingController();
   final txtNumber = TextEditingController();
+
+  late FootballModel player;
+
+  @override
+  void onInit() {
+    super.onInit();
+    final args = Get.arguments as Map<String, dynamic>? ?? {};
+    player = args['player'] as FootballModel;
+
+    if (txtName.text.isEmpty) {
+      setData(player);
+    }
+  }
 
   void setData(FootballModel player) {
     txtName.text = player.name;
@@ -14,20 +26,10 @@ class FootballEditController extends GetxController {
     txtNumber.text = player.number.toString();
   }
 
-  void saveData(int index) {
-    final controller = Get.find<FootballController>();
-    controller.players[index] = FootballModel(
-      profileImage: 'assets/profiile.png',
-      name: txtName.text,
-      position: txtPosition.text,
-      number: int.tryParse(txtNumber.text) ?? 0,
-    );
-
-    Get.back();
-    Get.snackbar(
-      "success",
-      "Player updated successfully",
-      snackPosition: SnackPosition.BOTTOM,
-    );
+  void saveData() {
+    player.name = txtName.text;
+    player.position = txtPosition.text;
+    player.number = int.tryParse(txtNumber.text) ?? 0;
+    Get.back(result: player);
   }
 }

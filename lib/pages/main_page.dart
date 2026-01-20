@@ -1,40 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:latihan1_11pplg1/controllers/main_controller.dart';
-import 'package:latihan1_11pplg1/pages/Cac_Page.dart';
-import 'package:latihan1_11pplg1/pages/football_page.dart';
-import 'package:latihan1_11pplg1/pages/profile_page.dart';
+import '../controllers/bottom_drawer_controller.dart';
+import '../fragments/bottom_drawer.dart';
+import 'Cac_Page.dart';
+import 'football_page.dart';
+import 'profile_page.dart';
+import 'movie_page.dart';
 
 class MainPage extends StatelessWidget {
   MainPage({super.key});
 
-  final MainController nav = Get.put(MainController());
+  final BottomDrawerController drawerCtrl = Get.put(BottomDrawerController());
 
-  final _pages = [CalculatorPage(), FootballPage(), const ProfilePage()];
+  final List<Widget> pages = [
+    CalculatorPage(),
+    FootballPage(),
+    ProfilePage(),
+    MoviePage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => Scaffold(
-        body: IndexedStack(index: nav.currentIndex.value, children: _pages),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: nav.currentIndex.value,
-          onTap: nav.changeTab,
-          items: [
-            BottomNavigationBarItem(
-              icon: Image.asset("assets/calculator.png", height: 25),
-              label: 'Kalkulator',
+      () => Stack(
+        children: [
+          Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              backgroundColor: Colors.black,
+              elevation: 0,
+              leading: IconButton(
+                icon: const Icon(Icons.menu, color: Colors.yellow),
+                onPressed: () => drawerCtrl.toggleDrawer(),
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: Image.asset("assets/football.png", height: 25),
-              label: 'Football',
-            ),
-            BottomNavigationBarItem(
-              icon: Image.asset("assets/account.png", height: 25),
-              label: 'Profile',
-            ),
-          ],
-        ),
+            body: pages[drawerCtrl.selectedIndex.value],
+          ),
+          const BottomDrawerWidget(),
+        ],
       ),
     );
   }

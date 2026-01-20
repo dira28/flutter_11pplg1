@@ -1,96 +1,75 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:latihan1_11pplg1/controllers/football_edit_controller.dart';
-import 'package:latihan1_11pplg1/models/football_model.dart';
+import 'package:latihan1_11pplg1/widgets/widget_button.dart';
+import 'package:latihan1_11pplg1/widgets/widget_textfield.dart';
+import '../controllers/football_edit_controller.dart';
 
 class FootballEditPage extends StatelessWidget {
   FootballEditPage({super.key});
-
   final FootballEditController editCtrl = Get.put(FootballEditController());
 
   @override
   Widget build(BuildContext context) {
-    final args = Get.arguments as Map<String, dynamic>? ?? {};
-    final int index = args['index'] ?? 0;
-    final FootballModel player = args['player'] as FootballModel;
-
-    if (editCtrl.txtName.text.isEmpty) {
-      editCtrl.setData(player);
-    }
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Edit Player"),
+        title: const Text("Edit Player", style: TextStyle(color: Colors.white)),
         centerTitle: true,
-        backgroundColor: Colors.cyan,
+        backgroundColor: Colors.black,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: ListView(
+        child: Column(
           children: [
             Center(
-              child: Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(player.profileImage),
-                    fit: BoxFit.cover,
-                  ),
-                  borderRadius: BorderRadius.zero,
-                ),
+              child: CircleAvatar(
+                radius: 60,
+                backgroundColor: Colors.yellow[600],
+                backgroundImage: editCtrl.player.profileImage.isNotEmpty
+                    ? AssetImage(editCtrl.player.profileImage)
+                    : null,
+                child: editCtrl.player.profileImage.isEmpty
+                    ? const Icon(Icons.person, size: 60, color: Colors.black)
+                    : null,
               ),
-            ),
-            const SizedBox(height: 16),
-
-            TextField(
-              controller: editCtrl.txtName,
-              decoration: InputDecoration(
-                labelText: "Name",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            TextField(
-              controller: editCtrl.txtPosition,
-              decoration: InputDecoration(
-                labelText: "Position",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            TextField(
-              controller: editCtrl.txtNumber,
-              decoration: InputDecoration(
-                labelText: "Number",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 20),
+            _buildEditForm(),
+          ],
+        ),
+      ),
+    );
+  }
 
+  Widget _buildEditForm() {
+    return Card(
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            CustomTextField(
+              textEditingController: editCtrl.txtName,
+              hintText: "Name",
+            ),
+            const SizedBox(height: 16),
+            CustomTextField(
+              textEditingController: editCtrl.txtPosition,
+              hintText: "Position",
+            ),
+            const SizedBox(height: 16),
+            CustomTextField(
+              textEditingController: editCtrl.txtNumber,
+              hintText: "Number",
+            ),
+            const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.cyan,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                ),
-                onPressed: () {
-                  editCtrl.saveData(index);
-                },
-                child: const Text(
-                  "Save Changes",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
+              child: CustomButton(
+                text: "Save Changes",
+                onPressed: editCtrl.saveData,
+                textColor: Colors.black,
               ),
             ),
           ],
