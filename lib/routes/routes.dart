@@ -13,6 +13,7 @@ class AppRoutes {
   static const loginfootball = "/loginfootball";
   static const premieretable = "/premieretable";
   static const movielist = "/movielist";
+  static const movieedit = "/movieedit";
   static const cardproduct = "/cardproduct";
 
   //others here
