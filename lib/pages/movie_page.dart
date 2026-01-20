@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../controllers/movie_controller.dart';
 import '../controllers/movie_edit_controller.dart';
 import 'movie_edit_page.dart';
+import 'movie_detail_page.dart';
 
 class MoviePage extends StatelessWidget {
   const MoviePage({super.key});
@@ -116,7 +117,8 @@ class MoviePage extends StatelessWidget {
                     },
                   ),
                   onTap: () {
-                    // Bisa ditambahkan untuk buka halaman detail kalau mau
+                    // Klik item → buka halaman detail
+                    Get.to(() => MovieDetailPage(movie: movie));
                   },
                 ),
               ),

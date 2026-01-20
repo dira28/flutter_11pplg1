@@ -7,7 +7,10 @@ class MovieDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final posterUrl = 'https://image.tmdb.org/t/p/w500${movie['poster_path']}';
+    final posterPath = movie['poster_path'];
+    final posterUrl = (posterPath != null && posterPath.isNotEmpty)
+        ? 'https://image.tmdb.org/t/p/w500$posterPath'
+        : null;
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -22,23 +25,23 @@ class MovieDetailPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Poster
             const SizedBox(height: 16),
+            // Poster
             Center(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: Image.network(
-                  posterUrl,
-                  height: 450,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      const Icon(Icons.broken_image, size: 120),
-                ),
+                child: posterUrl != null
+                    ? Image.network(
+                        posterUrl,
+                        height: 450,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.broken_image, size: 120),
+                      )
+                    : const Icon(Icons.movie, size: 120),
               ),
             ),
-
             const SizedBox(height: 16),
-
             // Detail Card
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -56,13 +59,11 @@ class MovieDetailPage extends StatelessWidget {
                       Text(
                         movie['title'] ?? '-',
                         style: const TextStyle(
-                          fontSize: 20,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-
                       const SizedBox(height: 8),
-
                       // Info Row
                       Row(
                         children: [
@@ -81,9 +82,7 @@ class MovieDetailPage extends StatelessWidget {
                           ),
                         ],
                       ),
-
                       const SizedBox(height: 16),
-
                       // Overview
                       const Text(
                         "Deskripsi",
@@ -103,9 +102,7 @@ class MovieDetailPage extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 24),
-
             // Buy Button
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -120,7 +117,11 @@ class MovieDetailPage extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    // nanti ke payment
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Fitur beli tiket belum aktif"),
+                      ),
+                    );
                   },
                   child: const Text(
                     "Beli Tiket",
@@ -133,7 +134,6 @@ class MovieDetailPage extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 24),
           ],
         ),
