@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:latihan1_11pplg1/pages/buyticket.dart';
 import '../controllers/bottom_drawer_controller.dart';
 import '../fragments/bottom_drawer.dart';
 import 'Cac_Page.dart';
@@ -15,8 +16,9 @@ class MainPage extends StatelessWidget {
   final List<Widget> pages = [
     CalculatorPage(),
     FootballPage(),
-    ProfilePage(),
     MoviePage(),
+    BuyTicketPage(),
+    ProfilePage(),
   ];
 
   @override

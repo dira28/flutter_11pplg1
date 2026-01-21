@@ -1,4 +1,5 @@
 import 'package:get/route_manager.dart';
+import 'package:latihan1_11pplg1/bindings/buyticket_binding.dart';
 import 'package:latihan1_11pplg1/bindings/calculator_binding.dart';
 import 'package:latihan1_11pplg1/bindings/contact_binding.dart';
 import 'package:latihan1_11pplg1/bindings/football_binding.dart';
@@ -11,6 +12,7 @@ import 'package:latihan1_11pplg1/bindings/premiere_binding.dart';
 import 'package:latihan1_11pplg1/bindings/splashscreen_binding.dart';
 import 'package:latihan1_11pplg1/bindings/login_binding.dart';
 import 'package:latihan1_11pplg1/pages/Cac_Page.dart';
+import 'package:latihan1_11pplg1/pages/buyticket.dart';
 import 'package:latihan1_11pplg1/pages/card_product.dart';
 import 'package:latihan1_11pplg1/pages/contact_page.dart';
 import 'package:latihan1_11pplg1/pages/football_edit_page.dart';
@@ -85,6 +87,11 @@ class AppPages {
       name: '/movie-edit',
       page: () => const MovieEditPage(),
       binding: MovieEditBinding(),
+    ),
+     GetPage(
+      name: AppRoutes.buyticket,
+      page: () =>  BuyTicketPage(),
+      binding: BuyTicketBinding(),
     ),
   ];
 }
