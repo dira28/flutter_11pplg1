@@ -4,7 +4,7 @@ import 'package:uuid/uuid.dart';
 
 class MidtransProvider {
   static const String _serverKey =
-      "Mid-server-k6evUhKAtPWnG5ArNHFTlA1z";
+      ""; // ini key nya Mid-server-k6evUhKAtPWnG5ArNHFTlA1z
 
   static const String _url =
       "https://app.sandbox.midtrans.com/snap/v1/transactions";
