@@ -1,16 +1,24 @@
+import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../services/payment_service.dart';
-import '../providers/midtrans_provider.dart';
 
 class MovieController extends GetxController {
   var isLoading = false.obs;
+
+  /// LIST MOVIE (API + FIRESTORE)
   var movies = <Map<String, dynamic>>[].obs;
 
-  final movieRef = FirebaseFirestore.instance.collection('movies');
+  /// FIRESTORE
+  final CollectionReference movieRef =
+      FirebaseFirestore.instance.collection('movies');
 
-  final PaymentService _paymentService = PaymentService();
-  final MidtransProvider _midtransProvider = MidtransProvider();
+  /// TMDB API (DARI CODE LAMA)
+  final String apiUrl =
+      "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1";
+
+  final String apiToken =
+      "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNzJhYmJmMGJjNGJkYWI0NGVhMDg4MmI4ZmYxZmZkNyIsIm5iZiI6MTc2MjgyNjMzNS43NDUsInN1YiI6IjY5MTI5ODVmZjM4Y2JkYTQ1ZGMwNjY4NCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.LcCTBKuM9wnyF4-MeU0dH3esOpveHafTuA39CFlDHF8";
 
   @override
   void onInit() {
@@ -18,55 +26,89 @@ class MovieController extends GetxController {
     loadMovies();
   }
 
-  // ================== PEMBAYARAN ==================
-  Future<void> checkoutMovie({
-    required String title,
-    required int amount,
-  }) async {
+  // ================== LOAD SEMUA DATA ==================
+  Future<void> loadMovies() async {
     try {
       isLoading.value = true;
+      movies.clear();
 
-      final snapToken =
-          await _midtransProvider.fetchSnapToken(amount, title);
-
-      isLoading.value = false;
-
-      if (snapToken == null) {
-        Get.snackbar("Error", "Gagal mendapatkan Snap Token");
-        return;
-      }
-
-      await _paymentService.startPayment(snapToken);
+      await fetchMoviesFromAPI();       // API TMDB
+      await fetchMoviesFromFirestore(); // FIRESTORE
     } catch (e) {
-      isLoading.value = false;
       Get.snackbar("Error", e.toString());
+    } finally {
+      isLoading.value = false;
     }
   }
 
-  // ================== DATA MOVIE ==================
-  Future<void> loadMovies() async {
-    isLoading.value = true;
-    movies.clear();
-    await fetchMoviesFromFirestore();
-    isLoading.value = false;
+  // ================== TMDB API (ASLI DARI CODE LAMA) ==================
+  Future<void> fetchMoviesFromAPI() async {
+    try {
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {
+          'Authorization': 'Bearer $apiToken',
+          'accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        final List apiMovies =
+            List<Map<String, dynamic>>.from(data['results']);
+
+        // tandai sumber API (PENTING)
+        for (var movie in apiMovies) {
+          movie['source'] = 'api';
+        }
+
+        movies.addAll(apiMovies.cast<Map<String, dynamic>>());
+      } else {
+        Get.snackbar(
+          "API Error",
+          "Gagal memuat movie (${response.statusCode})",
+        );
+      }
+    } catch (e) {
+      Get.snackbar("API Error", e.toString());
+    }
   }
 
+  // ================== FIRESTORE ==================
   Future<void> fetchMoviesFromFirestore() async {
     final snapshot = await movieRef.get();
-    movies.value = snapshot.docs
-        .map((doc) => doc.data())
-        .toList();
+
+    final firestoreMovies = snapshot.docs.map((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      data['id'] = doc.id;
+      data['source'] = 'firestore';
+      return data;
+    }).toList();
+
+    movies.addAll(firestoreMovies);
   }
-  Future<void> fetchMoviesFromAPI() async {
-    /* Kode API Anda */
-  }
+
+  // ================== CRUD FIRESTORE (DIPAKAI MovieEditController) ==================
   Future<void> addMovie(Map<String, dynamic> movie) async {
-    /* Kode Create Anda */
+    await movieRef.add(movie);
+    await loadMovies();
   }
+
   Future<void> updateMovie(int index, Map<String, dynamic> movie) async {
-    /* Kode Update Anda */
+    if (movie['source'] != 'firestore') return;
+
+    final id = movie['id'];
+    await movieRef.doc(id).update(movie);
+    await loadMovies();
   }
+
   Future<void> deleteMovie(int index) async {
-    /* Kode Delete Anda */
+    final movie = movies[index];
+
+    if (movie['source'] != 'firestore') return;
+
+    await movieRef.doc(movie['id']).delete();
+    await loadMovies();
   }
 }

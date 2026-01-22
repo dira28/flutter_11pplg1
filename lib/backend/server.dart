@@ -9,39 +9,52 @@ void main() async {
   final router = Router();
 
   router.post('/get-snap-token', (Request request) async {
-    final payload = jsonDecode(await request.readAsString());
-    
-    // SERVER KEY ANDA (Gunakan Server Key Sandbox jika ingin simulasi)
-    const serverKey = ''; 
-    final auth = 'Basic ${base64.encode(utf8.encode('$serverKey:'))}';
+    print("🔥 REQUEST MASUK KE BACKEND");
 
-    try {
-      final response = await http.post(
-        Uri.parse('https://app.sandbox.midtrans.com/snap/v1/transactions'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': auth,
+    final body = await request.readAsString();
+    print("📥 BODY DARI FLUTTER: $body");
+
+    final payload = jsonDecode(body);
+
+    const serverKey = 'Mid-server-k6evUhKAtPWnG5ArNHFTlA1z';
+    final auth =
+        'Basic ${base64.encode(utf8.encode('$serverKey:'))}';
+
+    final response = await http.post(
+      Uri.parse('https://app.sandbox.midtrans.com/snap/v1/transactions'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': auth,
+      },
+      body: jsonEncode({
+        "transaction_details": {
+          "order_id": "MOVIE-${DateTime.now().millisecondsSinceEpoch}",
+          "gross_amount": payload['amount'],
         },
-        body: jsonEncode({
-          "transaction_details": {
-            "order_id": "MOVIE-${DateTime.now().millisecondsSinceEpoch}",
-            "gross_amount": payload['amount']
-          },
-          "item_details": [{
-            "id": "item-01",
+        "item_details": [
+          {
+            "id": "movie-01",
             "price": payload['amount'],
             "quantity": 1,
-            "name": payload['movie_title']
-          }]
-        }),
-      );
+            "name": payload['movie_title'],
+          }
+        ]
+      }),
+    );
 
-      return Response.ok(response.body, headers: {'Content-Type': 'application/json'});
-    } catch (e) {
-      return Response.internalServerError(body: e.toString());
-    }
+    print("🔥 RESPONSE DARI MIDTRANS:");
+    print(response.body);
+
+    return Response.ok(
+      response.body,
+      headers: {'Content-Type': 'application/json'},
+    );
   });
+final server = await serve(
+  router,
+  InternetAddress.anyIPv4,
+  3000,
+);
 
-  final server = await serve(router, InternetAddress.anyIPv4, 3000);
-  print('Server Backend Sandbox jalan di: http://${server.address.host}:${server.port}');
+  print('🚀 Backend Midtrans Sandbox jalan di http://0.0.0.0:3000');
 }
