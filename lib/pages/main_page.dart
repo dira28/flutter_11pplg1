@@ -17,7 +17,8 @@ class MainPage extends StatelessWidget {
 
   final List<Widget> pages = [
     CalculatorPage(),
-    FootballPage(), // ✅ Fix: ganti FootballEditPage jadi FootballPage
+    FootballPage(),
+    MoviePage(),
     ProfilePage(),
   ];
 
@@ -66,13 +67,14 @@ class MainPage extends StatelessWidget {
                             label: "Football",
                           ),
                           BottomNavigationBarItem(
-                            icon: Icon(Icons.person),
-                            label: "Profile",
-                          ),
-                          BottomNavigationBarItem(
                             icon: Icon(Icons.movie),
                             label: "Movies",
                           ),
+                          BottomNavigationBarItem(
+                            icon: Icon(Icons.person),
+                            label: "Profile",
+                          ),
+                          
                         ],
                       ),
                     )
