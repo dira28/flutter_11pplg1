@@ -1,15 +1,20 @@
 import 'package:get/get.dart';
-
+  
 class BottomDrawerController extends GetxController {
-  var isOpen = false.obs;
-  var selectedIndex = 0.obs;
-
-  void openDrawer() => isOpen.value = true;
-  void closeDrawer() => isOpen.value = false;
-  void toggleDrawer() => isOpen.value = !isOpen.value;
+  final selectedIndex = 0.obs;
+  final isDrawerOpen = false.obs;
 
   void changePage(int index) {
     selectedIndex.value = index;
-    closeDrawer();
+    isDrawerOpen.value = false;
+  }
+
+  void toggleDrawer() {
+    isDrawerOpen.toggle();
+  }
+
+  void closeDrawer() {
+    isDrawerOpen.value = false;
   }
 }
+

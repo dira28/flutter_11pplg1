@@ -6,6 +6,7 @@ import 'package:latihan1_11pplg1/bindings/football_edit_binding.dart';
 import 'package:latihan1_11pplg1/bindings/login_api_binding.dart';
 import 'package:latihan1_11pplg1/bindings/login_football_binding.dart';
 import 'package:latihan1_11pplg1/bindings/movie_binding.dart';
+import 'package:latihan1_11pplg1/bindings/movie_edit_binding.dart';
 import 'package:latihan1_11pplg1/bindings/premiere_binding.dart';
 import 'package:latihan1_11pplg1/bindings/splashscreen_binding.dart';
 import 'package:latihan1_11pplg1/bindings/login_binding.dart';
@@ -17,10 +18,13 @@ import 'package:latihan1_11pplg1/pages/football_page.dart';
 import 'package:latihan1_11pplg1/pages/login_api_page.dart';
 import 'package:latihan1_11pplg1/pages/login_football_page.dart';
 import 'package:latihan1_11pplg1/pages/login_page.dart';
+import 'package:latihan1_11pplg1/pages/movie_edit_page.dart';
 import 'package:latihan1_11pplg1/pages/movie_page.dart';
 import 'package:latihan1_11pplg1/pages/premiere_table.dart';
 import 'package:latihan1_11pplg1/pages/profile_page.dart';
 import 'package:latihan1_11pplg1/pages/splashscreen_page.dart';
+import 'package:latihan1_11pplg1/pages/example_page.dart';
+import 'package:latihan1_11pplg1/bindings/example_binding.dart';
 import 'package:latihan1_11pplg1/routes/routes.dart';
 import 'package:latihan1_11pplg1/pages/main_page.dart';
 
@@ -78,6 +82,16 @@ class AppPages {
       page: () => MoviePage(),
       binding: MovieBinding(),
     ),
+    GetPage(
+      name: AppRoutes.examplescreen,
+      page: () => ExamplePage(),
+      binding: ExampleBinding(),
+    ),
     GetPage(name: AppRoutes.cardproduct, page: () => CardProduct()),
+    GetPage(
+      name: '/movie-edit',
+      page: () => const MovieEditPage(),
+      binding: MovieEditBinding(),
+    ),
   ];
 }

@@ -5,6 +5,7 @@ class CalculatorController extends GetxController {
   final txtAngka1 = TextEditingController();
   final txtAngka2 = TextEditingController();
   var hasil = "".obs;
+  var isMobile = true.obs;
 
   void tambah() {
     int angka1 = int.parse(txtAngka1.text.toString());
@@ -48,5 +49,8 @@ class CalculatorController extends GetxController {
     txtAngka1.clear();
     txtAngka2.clear();
     hasil.value = "";
+  }
+  void updatelayout(BoxConstraints constraints) {
+    isMobile.value = constraints.maxWidth < 600;
   }
 }
