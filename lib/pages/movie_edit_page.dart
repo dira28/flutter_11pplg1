@@ -52,10 +52,7 @@ class MovieEditPage extends StatelessWidget {
                     border: OutlineInputBorder(),
                     hintText: "Enter movie title",
                   ),
-                  controller: TextEditingController(
-                    text: controller.title.value,
-                  ),
-                  onChanged: (val) => controller.title.value = val,
+                  controller: controller.titleController,
                 ),
                 const SizedBox(height: 16),
 
@@ -75,10 +72,7 @@ class MovieEditPage extends StatelessWidget {
                     border: OutlineInputBorder(),
                     hintText: "Enter poster URL",
                   ),
-                  controller: TextEditingController(
-                    text: controller.posterPath.value,
-                  ),
-                  onChanged: (val) => controller.posterPath.value = val,
+                  controller: controller.posterPathController,
                 ),
                 const SizedBox(height: 16),
 
@@ -98,10 +92,7 @@ class MovieEditPage extends StatelessWidget {
                     border: OutlineInputBorder(),
                     hintText: "Enter movie overview",
                   ),
-                  controller: TextEditingController(
-                    text: controller.overview.value,
-                  ),
-                  onChanged: (val) => controller.overview.value = val,
+                  controller: controller.overviewController,
                 ),
                 const SizedBox(height: 16),
 
@@ -121,38 +112,54 @@ class MovieEditPage extends StatelessWidget {
                     border: OutlineInputBorder(),
                     hintText: "Enter movie rating",
                   ),
-                  controller: TextEditingController(
-                    text: controller.voteAverage.value.toString(),
-                  ),
-                  onChanged: (val) =>
-                      controller.voteAverage.value = double.tryParse(val) ?? 0,
+                  controller: controller.voteAverageController,
                 ),
                 const SizedBox(height: 24),
 
                 // Buttons
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Cancel
-                    ElevatedButton(
-                      onPressed: () => Get.back(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                      ),
-                      child: const Text(
-                        "Cancel",
-                        style: TextStyle(color: Colors.yellow),
+                    // Cancel Button
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => Get.back(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey[600],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        child: const Text(
+                          "Cancel",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     ),
-                    // Save
-                    ElevatedButton(
-                      onPressed: () => controller.saveMovie(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                      ),
-                      child: const Text(
-                        "Save",
-                        style: TextStyle(color: Colors.yellow),
+                    const SizedBox(width: 12),
+                    // Save Button
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => controller.saveMovie(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        child: const Text(
+                          "Save",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.yellow,
+                          ),
+                        ),
                       ),
                     ),
                   ],

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart' hide Table;
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:latihan1_11pplg1/models/Table_Model.dart';
@@ -29,12 +30,26 @@ class PremierTableController extends GetxController {
       } else {
         Get.snackbar(
           "Error",
-          "Failed to load data: ${response.statusCode}",
+          "Gagal memuat data",
           snackPosition: SnackPosition.BOTTOM,
+          margin: const EdgeInsets.all(12),
+          borderRadius: 10,
+          backgroundColor: const Color(0xCCF44336),
+          colorText: Colors.white,
+          duration: const Duration(seconds: 2),
         );
       }
     } catch (e) {
-      Get.snackbar("Warning", e.toString());
+      Get.snackbar(
+        "Warning",
+        "Terjadi kesalahan saat memuat data",
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(12),
+        borderRadius: 10,
+        backgroundColor: const Color(0xCCFF9800),
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
     }
     isLoading.value = false;
   }

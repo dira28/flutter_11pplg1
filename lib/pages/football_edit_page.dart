@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:latihan1_11pplg1/widgets/widget_button.dart';
 import 'package:latihan1_11pplg1/widgets/widget_textfield.dart';
 import '../controllers/football_edit_controller.dart';
 
@@ -64,13 +63,53 @@ class FootballEditPage extends StatelessWidget {
               hintText: "Number",
             ),
             const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: CustomButton(
-                text: "Save Changes",
-                onPressed: editCtrl.saveData,
-                textColor: Colors.black,
-              ),
+            // Buttons Row
+            Row(
+              children: [
+                // Cancel Button
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => Get.back(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[600],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    child: const Text(
+                      "Cancel",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                // Save Button
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: editCtrl.saveData,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.yellow[700],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    child: const Text(
+                      "Save Changes",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

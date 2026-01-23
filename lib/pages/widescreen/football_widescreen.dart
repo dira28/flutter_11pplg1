@@ -5,10 +5,10 @@ import '../../models/football_model.dart';
 import '../../routes/routes.dart';
 
 class FootballWidescreen extends StatelessWidget {
-  final footballController = Get.find<FootballController>();
-
   @override
   Widget build(BuildContext context) {
+    // ✅ Pastikan FootballController sudah terdaftar
+    final footballController = Get.put(FootballController());
     return Obx(
       () => GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

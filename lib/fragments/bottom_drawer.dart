@@ -15,7 +15,7 @@ class BottomDrawerWidget extends StatelessWidget {
         curve: Curves.easeInOut,
         top: 0,
         bottom: 0,
-        left: drawerCtrl.isOpen.value ? 0 : -270,
+        left: drawerCtrl.isDrawerOpen.value ? 0 : -270,
         width: 270,
         child: Material(
           elevation: 16,

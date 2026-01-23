@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class MovieController extends GetxController {
   var isLoading = false.obs;
   var movies = <Map<String, dynamic>>[].obs;
+  var isMobile = true.obs;
 
   final movieRef = FirebaseFirestore.instance.collection('movies');
 
@@ -59,10 +61,28 @@ class MovieController extends GetxController {
 
         movies.addAll(formatted);
       } else {
-        Get.snackbar("Error", "Gagal fetch API: ${response.statusCode}");
+        Get.snackbar(
+          "Error",
+          "Gagal memuat data dari API",
+          snackPosition: SnackPosition.BOTTOM,
+          margin: const EdgeInsets.all(12),
+          borderRadius: 10,
+          backgroundColor: const Color(0xCCF44336),
+          colorText: Colors.white,
+          duration: const Duration(seconds: 2),
+        );
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar(
+        "Error",
+        "Terjadi kesalahan saat memuat data",
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(12),
+        borderRadius: 10,
+        backgroundColor: const Color(0xCCF44336),
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
     }
   }
 
@@ -80,7 +100,16 @@ class MovieController extends GetxController {
       }).toList();
       movies.addAll(firestoreMovies);
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar(
+        "Error",
+        "Gagal memuat data dari Firestore",
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(12),
+        borderRadius: 10,
+        backgroundColor: const Color(0xCCF44336),
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
     }
   }
 
@@ -99,8 +128,28 @@ class MovieController extends GetxController {
       movie['id'] = docRef.id;
       movie['source'] = 'firestore';
       movies.insert(0, movie);
+      
+      Get.snackbar(
+        "Success ✅",
+        "Movie berhasil ditambahkan",
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(12),
+        borderRadius: 10,
+        backgroundColor: const Color(0xCC4CAF50),
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
     } catch (e) {
-      Get.snackbar("Error", "Gagal menambahkan movie: $e");
+      Get.snackbar(
+        "Error",
+        "Gagal menambahkan movie",
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(12),
+        borderRadius: 10,
+        backgroundColor: const Color(0xCCF44336),
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
     }
   }
 
@@ -118,8 +167,28 @@ class MovieController extends GetxController {
       }
       movies[index] = movie;
       movies.refresh();
+      
+      Get.snackbar(
+        "Success ✅",
+        "Movie berhasil diupdate",
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(12),
+        borderRadius: 10,
+        backgroundColor: const Color(0xCC4CAF50),
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
     } catch (e) {
-      Get.snackbar("Error", "Gagal update movie: $e");
+      Get.snackbar(
+        "Error",
+        "Gagal mengupdate movie",
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(12),
+        borderRadius: 10,
+        backgroundColor: const Color(0xCCF44336),
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
     }
   }
 
@@ -132,7 +201,19 @@ class MovieController extends GetxController {
       }
       movies.removeAt(index);
     } catch (e) {
-      Get.snackbar("Error", "Gagal delete movie: $e");
+      Get.snackbar(
+        "Error",
+        "Gagal menghapus movie",
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(12),
+        borderRadius: 10,
+        backgroundColor: const Color(0xCCF44336),
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
     }
+  }
+  void updatelayout(BoxConstraints constraints) {
+    isMobile.value = constraints.maxWidth < 600;
   }
 }
