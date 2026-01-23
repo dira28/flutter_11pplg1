@@ -15,6 +15,7 @@ class AppRoutes {
   static const movielist = "/movielist";
   static const movieedit = "/movieedit";
   static const cardproduct = "/cardproduct";
+  static const buyticket = "/buyticket";
 
   //others here
 }

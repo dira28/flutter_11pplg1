@@ -19,7 +19,6 @@ class MainPage extends StatelessWidget {
     CalculatorPage(),
     FootballPage(), // ✅ Fix: ganti FootballEditPage jadi FootballPage
     ProfilePage(),
-    MoviePage(),
   ];
 
   @override

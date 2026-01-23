@@ -6,15 +6,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MovieController extends GetxController {
   var isLoading = false.obs;
+
+  /// LIST MOVIE (API + FIRESTORE)
   var movies = <Map<String, dynamic>>[].obs;
   var isMobile = true.obs;
 
-  final movieRef = FirebaseFirestore.instance.collection('movies');
+  /// FIRESTORE
+  final CollectionReference movieRef =
+      FirebaseFirestore.instance.collection('movies');
 
-  // ================= TMDB API v4 =================
-  final String url =
+  /// TMDB API (DARI CODE LAMA)
+  final String apiUrl =
       "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1";
-  final String token =
+
+  final String apiToken =
       "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNzJhYmJmMGJjNGJkYWI0NGVhMDg4MmI4ZmYxZmZkNyIsIm5iZiI6MTc2MjgyNjMzNS43NDUsInN1YiI6IjY5MTI5ODVmZjM4Y2JkYTQ1ZGMwNjY4NCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.LcCTBKuM9wnyF4-MeU0dH3esOpveHafTuA39CFlDHF8";
 
   @override
@@ -23,43 +28,44 @@ class MovieController extends GetxController {
     loadMovies();
   }
 
-  /// ================= LOAD & MERGE =================
+  // ================== LOAD SEMUA DATA ==================
   Future<void> loadMovies() async {
-    isLoading.value = true;
-    movies.clear();
-    await fetchMoviesFromAPI();
-    await fetchMoviesFromFirestore();
-    isLoading.value = false;
+    try {
+      isLoading.value = true;
+      movies.clear();
+
+      await fetchMoviesFromAPI();       // API TMDB
+      await fetchMoviesFromFirestore(); // FIRESTORE
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    } finally {
+      isLoading.value = false;
+    }
   }
 
-  /// ================= FETCH TMDB API v4 =================
+  // ================== TMDB API (ASLI DARI CODE LAMA) ==================
   Future<void> fetchMoviesFromAPI() async {
     try {
       final response = await http.get(
-        Uri.parse(url),
+        Uri.parse(apiUrl),
         headers: {
-          'Authorization': 'Bearer $token',
+          'Authorization': 'Bearer $apiToken',
           'accept': 'application/json',
         },
       );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final apiMovies = List<Map<String, dynamic>>.from(data['results']);
 
-        final formatted = apiMovies.map((e) {
-          return {
-            'id': e['id'].toString(),
-            'title': e['title'],
-            'overview': e['overview'],
-            'poster_path': e['poster_path'],
-            'vote_average': e['vote_average'],
-            'release_date': e['release_date'],
-            'source': 'api',
-          };
-        }).toList();
+        final List apiMovies =
+            List<Map<String, dynamic>>.from(data['results']);
 
-        movies.addAll(formatted);
+        // tandai sumber API (PENTING)
+        for (var movie in apiMovies) {
+          movie['source'] = 'api';
+        }
+
+        movies.addAll(apiMovies.cast<Map<String, dynamic>>());
       } else {
         Get.snackbar(
           "Error",
@@ -86,7 +92,7 @@ class MovieController extends GetxController {
     }
   }
 
-  /// ================= FETCH FIRESTORE =================
+  // ================== FIRESTORE ==================
   Future<void> fetchMoviesFromFirestore() async {
     try {
       final snapshot = await movieRef
@@ -113,7 +119,7 @@ class MovieController extends GetxController {
     }
   }
 
-  /// ================= CREATE =================
+  // ================== CRUD FIRESTORE (DIPAKAI MovieEditController) ==================
   Future<void> addMovie(Map<String, dynamic> movie) async {
     try {
       final docRef = await movieRef.add({

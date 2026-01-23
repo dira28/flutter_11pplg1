@@ -50,8 +50,9 @@ class BottomDrawerWidget extends StatelessWidget {
                 // Menu items
                 drawerItem(Icons.calculate, "Kalkulator", 0, drawerCtrl),
                 drawerItem(Icons.sports_soccer, "Football", 1, drawerCtrl),
-                drawerItem(Icons.person, "Profile", 2, drawerCtrl),
-                drawerItem(Icons.movie, "Movies", 3, drawerCtrl),
+                drawerItem(Icons.movie, "Movies", 2, drawerCtrl),
+                drawerItem(Icons.shopping_cart, "Buy Ticket", 3, drawerCtrl),
+                drawerItem(Icons.person, "Profile", 4, drawerCtrl),
               ],
             ),
           ),
