@@ -1,23 +1,20 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MovieController extends GetxController {
   var isLoading = false.obs;
-
-  /// LIST MOVIE (API + FIRESTORE)
+  var isMobile = true.obs;
   var movies = <Map<String, dynamic>>[].obs;
 
-  /// FIRESTORE
-  final CollectionReference movieRef =
-      FirebaseFirestore.instance.collection('movies');
+  final movieRef = FirebaseFirestore.instance.collection('movies');
 
-  /// TMDB API (DARI CODE LAMA)
-  final String apiUrl =
+  // ================= TMDB API v4 =================
+  final String url =
       "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1";
-
-  final String apiToken =
+  final String token =
       "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNzJhYmJmMGJjNGJkYWI0NGVhMDg4MmI4ZmYxZmZkNyIsIm5iZiI6MTc2MjgyNjMzNS43NDUsInN1YiI6IjY5MTI5ODVmZjM4Y2JkYTQ1ZGMwNjY4NCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.LcCTBKuM9wnyF4-MeU0dH3esOpveHafTuA39CFlDHF8";
 
   @override
@@ -26,89 +23,121 @@ class MovieController extends GetxController {
     loadMovies();
   }
 
-  // ================== LOAD SEMUA DATA ==================
+  /// ================= LOAD & MERGE =================
   Future<void> loadMovies() async {
-    try {
-      isLoading.value = true;
-      movies.clear();
-
-      await fetchMoviesFromAPI();       // API TMDB
-      await fetchMoviesFromFirestore(); // FIRESTORE
-    } catch (e) {
-      Get.snackbar("Error", e.toString());
-    } finally {
-      isLoading.value = false;
-    }
+    isLoading.value = true;
+    movies.clear();
+    // await fetchMoviesFromAPI();
+    await fetchMoviesFromFirestore();
+    isLoading.value = false;
   }
 
-  // ================== TMDB API (ASLI DARI CODE LAMA) ==================
+  /// ================= FETCH TMDB API v4 =================
   Future<void> fetchMoviesFromAPI() async {
     try {
       final response = await http.get(
-        Uri.parse(apiUrl),
+        Uri.parse(url),
         headers: {
-          'Authorization': 'Bearer $apiToken',
+          'Authorization': 'Bearer $token',
           'accept': 'application/json',
         },
       );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        final apiMovies = List<Map<String, dynamic>>.from(data['results']);
 
-        final List apiMovies =
-            List<Map<String, dynamic>>.from(data['results']);
+        final formatted = apiMovies.map((e) {
+          return {
+            'id': e['id'].toString(),
+            'title': e['title'],
+            'overview': e['overview'],
+            'poster_path': e['poster_path'],
+            'vote_average': e['vote_average'],
+            'release_date': e['release_date'],
+            'source': 'api',
+          };
+        }).toList();
 
-        // tandai sumber API (PENTING)
-        for (var movie in apiMovies) {
-          movie['source'] = 'api';
-        }
-
-        movies.addAll(apiMovies.cast<Map<String, dynamic>>());
+        movies.addAll(formatted);
       } else {
-        Get.snackbar(
-          "API Error",
-          "Gagal memuat movie (${response.statusCode})",
-        );
+        Get.snackbar("Error", "Gagal fetch API: ${response.statusCode}");
       }
     } catch (e) {
-      Get.snackbar("API Error", e.toString());
+      Get.snackbar("Error", e.toString());
     }
   }
 
-  // ================== FIRESTORE ==================
+  /// ================= FETCH FIRESTORE =================
   Future<void> fetchMoviesFromFirestore() async {
-    final snapshot = await movieRef.get();
-
-    final firestoreMovies = snapshot.docs.map((doc) {
-      final data = doc.data() as Map<String, dynamic>;
-      data['id'] = doc.id;
-      data['source'] = 'firestore';
-      return data;
-    }).toList();
-
-    movies.addAll(firestoreMovies);
+    try {
+      final snapshot = await movieRef
+          .orderBy('created_at', descending: true)
+          .get();
+      final firestoreMovies = snapshot.docs.map((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
+        data['source'] = 'firestore';
+        return data;
+      }).toList();
+      movies.addAll(firestoreMovies);
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    }
   }
 
-  // ================== CRUD FIRESTORE (DIPAKAI MovieEditController) ==================
+  /// ================= CREATE =================
   Future<void> addMovie(Map<String, dynamic> movie) async {
-    await movieRef.add(movie);
-    await loadMovies();
+    try {
+      final docRef = await movieRef.add({
+        'title': movie['title'],
+        'overview': movie['overview'],
+        'poster_path': movie['poster_path'],
+        'vote_average': movie['vote_average'] ?? 0,
+        'release_date': movie['release_date'] ?? '',
+        'created_at': DateTime.now(),
+      });
+
+      movie['id'] = docRef.id;
+      movie['source'] = 'firestore';
+      movies.insert(0, movie);
+    } catch (e) {
+      Get.snackbar("Error", "Gagal menambahkan movie: $e");
+    }
   }
 
+  /// ================= UPDATE =================
   Future<void> updateMovie(int index, Map<String, dynamic> movie) async {
-    if (movie['source'] != 'firestore') return;
-
-    final id = movie['id'];
-    await movieRef.doc(id).update(movie);
-    await loadMovies();
+    try {
+      if (movie['source'] == 'firestore') {
+        await movieRef.doc(movie['id']).update({
+          'title': movie['title'],
+          'overview': movie['overview'],
+          'poster_path': movie['poster_path'],
+          'vote_average': movie['vote_average'],
+          'release_date': movie['release_date'],
+        });
+      }
+      movies[index] = movie;
+      movies.refresh();
+    } catch (e) {
+      Get.snackbar("Error", "Gagal update movie: $e");
+    }
   }
 
+  /// ================= DELETE =================
   Future<void> deleteMovie(int index) async {
-    final movie = movies[index];
-
-    if (movie['source'] != 'firestore') return;
-
-    await movieRef.doc(movie['id']).delete();
-    await loadMovies();
+    try {
+      final movie = movies[index];
+      if (movie['source'] == 'firestore') {
+        await movieRef.doc(movie['id']).delete();
+      }
+      movies.removeAt(index);
+    } catch (e) {
+      Get.snackbar("Error", "Gagal delete movie: $e");
+    }
+  }
+   void updatelayout(BoxConstraints constraints) {
+    isMobile.value = constraints.maxWidth < 600;
   }
 }

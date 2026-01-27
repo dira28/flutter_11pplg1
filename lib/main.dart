@@ -5,10 +5,10 @@ import 'package:latihan1_11pplg1/controllers/notification_controller.dart';
 import 'package:latihan1_11pplg1/controllers/login_football_controller.dart';
 import 'package:latihan1_11pplg1/routes/pages.dart';
 import 'package:latihan1_11pplg1/routes/routes.dart';
-import 'firebase_options.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.
+  ensureInitialized();
 
   await Firebase.initializeApp();
 

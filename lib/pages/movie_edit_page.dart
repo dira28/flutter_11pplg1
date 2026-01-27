@@ -52,7 +52,10 @@ class MovieEditPage extends StatelessWidget {
                     border: OutlineInputBorder(),
                     hintText: "Enter movie title",
                   ),
-                  controller: controller.titleController,
+                  controller: TextEditingController(
+                    text: controller.title.value,
+                  ),
+                  onChanged: (val) => controller.title.value = val,
                 ),
                 const SizedBox(height: 16),
 
@@ -72,7 +75,10 @@ class MovieEditPage extends StatelessWidget {
                     border: OutlineInputBorder(),
                     hintText: "Enter poster URL",
                   ),
-                  controller: controller.posterPathController,
+                  controller: TextEditingController(
+                    text: controller.posterPath.value,
+                  ),
+                  onChanged: (val) => controller.posterPath.value = val,
                 ),
                 const SizedBox(height: 16),
 
@@ -92,7 +98,10 @@ class MovieEditPage extends StatelessWidget {
                     border: OutlineInputBorder(),
                     hintText: "Enter movie overview",
                   ),
-                  controller: controller.overviewController,
+                  controller: TextEditingController(
+                    text: controller.overview.value,
+                  ),
+                  onChanged: (val) => controller.overview.value = val,
                 ),
                 const SizedBox(height: 16),
 
@@ -112,54 +121,38 @@ class MovieEditPage extends StatelessWidget {
                     border: OutlineInputBorder(),
                     hintText: "Enter movie rating",
                   ),
-                  controller: controller.voteAverageController,
+                  controller: TextEditingController(
+                    text: controller.voteAverage.value.toString(),
+                  ),
+                  onChanged: (val) =>
+                      controller.voteAverage.value = double.tryParse(val) ?? 0,
                 ),
                 const SizedBox(height: 24),
 
                 // Buttons
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Cancel Button
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () => Get.back(),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey[600],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                        ),
-                        child: const Text(
-                          "Cancel",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
+                    // Cancel
+                    ElevatedButton(
+                      onPressed: () => Get.back(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                      ),
+                      child: const Text(
+                        "Cancel",
+                        style: TextStyle(color: Colors.yellow),
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    // Save Button
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () => controller.saveMovie(),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                        ),
-                        child: const Text(
-                          "Save",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.yellow,
-                          ),
-                        ),
+                    // Save
+                    ElevatedButton(
+                      onPressed: () => controller.saveMovie(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                      ),
+                      child: const Text(
+                        "Save",
+                        style: TextStyle(color: Colors.yellow),
                       ),
                     ),
                   ],
